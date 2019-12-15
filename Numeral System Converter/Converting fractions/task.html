@@ -1,0 +1,131 @@
+<h2 style="text-align: center;">Description</h2>
+
+<p>Add support for fractional numbers. If there is a decimal point, use an algorithm to get the fractional answer.</p>
+
+<p>You need to round up the result to five decimal places.</p>
+
+<h2 style="text-align: center;">Algorithm</h2>
+
+<p>You can use the following algorithm.</p>
+
+<p>Interpret the source number as a string <span class="math-tex">\(\overline{int.frac}_{base}\)</span> and parse integer and fraction independently.</p>
+
+<p>Save the integer part as a <code>long</code> using the standard library.</p>
+
+<p>Save the fractional part as a <code>double</code> using formula like <span class="math-tex">\(\frac{f}{{base}^1} + \frac{r}{{base}^2} + \frac{a}{{base}^3} + \frac{c}{{base}^4}\)</span>.</p>
+
+<p>Of course, you should support numbers of bigger length.</p>
+
+<p>To compute symbols of the target number fractional part, get fraction symbol-by-symbol. Here sre some examples:</p>
+
+<p><strong>Example 1:</strong></p>
+
+<p><span class="math-tex">\(0.234_{10}\)</span> to base 7.</p>
+
+<ol>
+	<li><span class="math-tex">\(0.234 \cdot 7 = 1.638\)</span>: the first fraction symbol is 1.</li>
+	<li>Remove integer part. <span class="math-tex">\(0.638 \cdot 7 = 4.466\)</span>: the second fraction symbol is 4.</li>
+	<li>Remove integer part. <span class="math-tex">\(0.466 \cdot 7 = 3.262\)</span>: the third fraction symbol is 3.</li>
+	<li>The same for the next symbols.</li>
+</ol>
+
+<p>So, the number in the base 7 would be <span class="math-tex">\(0.143..._7\)</span></p>
+
+<p><strong>Example 2:</strong></p>
+
+<p><span class="math-tex">\(0.234_{10}\)</span> to base 36.</p>
+
+<ol>
+	<li><span class="math-tex">\(0.234  \cdot 36 = 8.424\)</span>: the first fraction symbol is 1.</li>
+	<li><span class="math-tex">\(0.424 \cdot 36 = 15.264\)</span>: the second fraction symbol is '15' and 'f' in base 36.</li>
+	<li><span class="math-tex">\(0.264 \cdot 36 = 9.504\)</span>: the third fraction symbol is 9.</li>
+</ol>
+
+<p>So, the number in the base 36 would be <span class="math-tex">\(0.1f9..._{36}\)</span></p>
+
+<p><strong>Example 3:</strong></p>
+
+<p><span class="math-tex">\(0.234_{7}\)</span> to base 36.</p>
+
+<ol>
+	<li>Convert the fractional part to base 10 using the formula above: <span class="math-tex">\(2 / 7 + 3 / 49 + 4 / 343 = 0.358..._{10}\)</span></li>
+	<li>Convert this number to base 36 like in example 2.</li>
+</ol>
+
+<p>This stage is auto-graded. The grader will <strong>input three lines</strong>: the source radix, the source number, and the target radix. Then it will check that<strong> your output</strong> is the correct number representation in the given radix. Don't forget to round the result up to 5 decimal places! But if there was no fractional part in the initial number you don't need to show the fractional part too.</p>
+
+<p>Also, numbers in radix 1 cannot have fractional part so they tested only as integer part (like in the previous stage).</p>
+
+<h2 style="text-align: center;">Examples</h2>
+
+<p><strong>Example 1:</strong></p>
+
+<p>Input:</p>
+
+<pre><code class="language-no-highlight">10
+0.234
+7</code></pre>
+
+<p>Output:</p>
+
+<pre><code class="language-no-highlight">0.14315</code></pre>
+
+<p><strong>Example 2:</strong></p>
+
+<p>Input:</p>
+
+<pre><code class="language-no-highlight">10
+10.234
+7</code></pre>
+
+<p>Output:</p>
+
+<pre><code class="language-no-highlight">13.14315</code></pre>
+
+<p><strong>Example 3:</strong></p>
+
+<p>Input:</p>
+
+<pre><code class="language-no-highlight">35
+af.xy
+17</code></pre>
+
+<p>Output:</p>
+
+<pre><code class="language-no-highlight">148.g88a8</code></pre>
+
+<p><strong>Example 4:</strong></p>
+
+<p>Input:</p>
+
+<pre><code class="language-no-highlight">16
+aaaaa.0
+24</code></pre>
+
+<p>Output:</p>
+
+<pre><code class="language-no-highlight">22df2.00000</code></pre>
+
+<p><strong>Example 5:</strong></p>
+
+<p>Input:</p>
+
+<pre><code class="language-no-highlight">21
+4242
+6</code></pre>
+
+<p>Output:</p>
+
+<pre><code class="language-no-highlight">451552</code></pre>
+
+<p><strong>Example 6:</strong></p>
+
+<p>Input:</p>
+
+<pre><code class="language-no-highlight">1
+1111111
+10</code></pre>
+
+<p>Output:</p>
+
+<pre><code class="language-no-highlight">7</code></pre>

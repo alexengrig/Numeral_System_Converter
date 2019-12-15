@@ -1,0 +1,57 @@
+<h2 style="text-align: center;">Description</h2>
+
+<p>Add support for reading the source number in the given radix and conversion it to another given radix.</p>
+
+<p>As there are 26 Latin letters, the maximum radix is 10+26=36. The minimum radix is 1: the number N in radix 1 contains a symbol <code>1</code> N times. To input radix from 2 to 36 use <code>Long.parseLong(sourseNumberString, sourceRadix)</code> expression.</p>
+
+<p>This stage is auto-graded. The grader will <strong>input three lines</strong>: the source radix, the source number, and the target radix. Then it will check that <strong>your output</strong> is the correct number representation in the given radix (don't use prefixes now).</p>
+
+<h2 style="text-align: center;">Example</h2>
+
+<p><strong>Example 1:</strong></p>
+
+<p>Input:</p>
+
+<pre><code class="language-no-highlight">10
+11
+2</code></pre>
+
+<p>Output:</p>
+
+<pre><code class="language-no-highlight">1011</code></pre>
+
+<p><strong>Example 2:</strong></p>
+
+<p>Input:</p>
+
+<pre><code class="language-no-highlight">1
+11111
+10</code></pre>
+
+<p>Output:</p>
+
+<pre><code class="language-no-highlight">5</code></pre>
+
+<p><strong>Example 3:</strong></p>
+
+<p>Input:</p>
+
+<pre><code class="language-no-highlight">10
+4
+1</code></pre>
+
+<p>Output:</p>
+
+<pre><code class="language-no-highlight">1111</code></pre>
+
+<p><strong>Example 4:</strong></p>
+
+<p>Input:</p>
+
+<pre><code class="language-no-highlight">10
+1001
+36</code></pre>
+
+<p>Output:</p>
+
+<pre><code class="language-no-highlight">rt</code></pre>
