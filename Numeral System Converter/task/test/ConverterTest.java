@@ -3,18 +3,30 @@ import org.hyperskill.hstest.v6.stage.BaseStageTest;
 import org.hyperskill.hstest.v6.testcase.CheckResult;
 import org.hyperskill.hstest.v6.testcase.TestCase;
 
-import java.math.BigInteger;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 class Clue {
-    String feedback;
-    Clue(String feedback) {
-        this.feedback = feedback;
+
+    final String input;
+    final String answer;
+    final boolean provideAnswer;
+
+    Clue(final String input, final String answer, final boolean provideAnswer) {
+        this.input = input;
+        this.answer = answer;
+        this.provideAnswer = provideAnswer;
+    }
+
+    Clue(final String input, final String answer) {
+        this(input, answer, false);
+    }
+
+    Clue(final String input) {
+        this(input, null, false);
     }
 }
+
 
 public class ConverterTest extends BaseStageTest<Clue> {
 
@@ -22,13 +34,31 @@ public class ConverterTest extends BaseStageTest<Clue> {
         super(Main.class);
     }
 
-    static final String BINARY_PREFIX = "0b";
+    public static TestCase<Clue> iToTest(final int i, final boolean provideAnswer) {
+        final String octal = Integer.toString(i, 8);
+        final String octalLast = octal.substring(octal.length() - 1);
+        final String input = Integer.toString(i);
+
+        return new TestCase<Clue>()
+            .setAttach(new Clue(input, octalLast, provideAnswer))
+            .setInput(input);
+    }
 
     @Override
     public List<TestCase<Clue>> generate() {
-        return List.of(
-            new TestCase<>()
-        );
+        final List<TestCase<Clue>> tests = new ArrayList<>();
+
+        /* Tests with a hint: */
+        for (int i = 0; i <= 10; ++i) {
+            tests.add(iToTest(i, true));
+        }
+
+        /* Tests without a hint: */
+        for (int i = 2340; i <= 2350; ++i) {
+            tests.add(iToTest(i, false));
+        }
+
+        return tests;
     }
 
     @Override
@@ -38,62 +68,31 @@ public class ConverterTest extends BaseStageTest<Clue> {
             .filter(line -> !line.isEmpty())
             .toArray(String[]::new);
 
-        if (lines.length != 1) {
+        if (lines.length == 0) {
             return new CheckResult(
                 false,
-                String.format(
-                    "Your program doesn't print exactly one line. A number of lines found: %d.",
-                    lines.length
-                )
+                "Your program doesn't print any line."
             );
         }
 
-        final Set<String> words = Arrays
-            .stream(lines[0].split(" "))
-            .filter(word -> !word.isEmpty())
-            .collect(Collectors.toSet());
+        final String answer = lines[lines.length - 1];
 
-        final String[] binaries = words
-            .stream()
-            .filter(word -> word.startsWith(BINARY_PREFIX))
-            .map(word -> word.split(BINARY_PREFIX)[1])
-            .filter(word -> word.chars().mapToObj(i -> (char) i).allMatch(c -> c == '1' || c == '0'))
-            .toArray(String[]::new);
-
-        if (binaries.length != 1) {
-            return new CheckResult(
-                false,
-                String.format(
-                    "Your responsesFromClient doesn't contain exactly one binary. Binaries have been found: %s.",
-                    Arrays.toString(binaries)
-                )
-            );
-        }
-
-        final String[] numbers = words
-            .stream()
-            .filter(word -> word.chars().mapToObj(i -> (char) i).allMatch(Character::isDigit))
-            .toArray(String[]::new);
-
-        if (numbers.length != 1) {
-            return new CheckResult(
-                false,
-                String.format(
-                    "Your responsesFromClient doesn't contain exactly one number. Numbers have been found: %s.",
-                    Arrays.toString(binaries)
-                )
-            );
-        }
-
-
-        final BigInteger binary = new BigInteger(binaries[0], 2);
-        final BigInteger number = new BigInteger(numbers[0], 10);
-
-        if (!binary.equals(number)) {
-            return new CheckResult(
-                false,
-                String.format("%s%s != %s", BINARY_PREFIX, binaries[0], numbers[0])
-            );
+        if (!answer.equals(clue.answer)) {
+            if (clue.provideAnswer) {
+                return new CheckResult(
+                    false,
+                    "Your answer is wrong.\n" +
+                        "This is a sample test so we give you a hint.\n" +
+                        "Input: " + clue.input + "\n" +
+                        "Your answer: " + answer + "\n" +
+                        "Correct answer: " + clue.answer
+                );
+            } else {
+                return new CheckResult(
+                    false,
+                    "Your answer is wrong."
+                );
+            }
         }
 
         return new CheckResult(true);

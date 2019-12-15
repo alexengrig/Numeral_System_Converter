@@ -1,7 +1,12 @@
 package converter;
 
+import java.util.Scanner;
+
 public class Main {
     public static void main(String[] args) {
-        System.out.println("10 = 0b1010");
+        Scanner scanner = new Scanner(System.in);
+        int number = scanner.nextInt();
+        String binary = Integer.toOctalString(number);
+        System.out.println(binary.charAt(binary.length() - 1));
     }
 }
