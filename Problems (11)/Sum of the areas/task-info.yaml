@@ -1,0 +1,12 @@
+type: code
+files:
+- name: src/Main.java
+  visible: true
+  text: |-
+    public static int sumOfAreas(Shape[] array) {
+        // write your code here
+    }
+  learner_created: false
+feedback_link: https://hyperskill.org/learn/step/4341
+status: Solved
+record: -1
