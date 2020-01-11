@@ -156,6 +156,9 @@ files:
         }
     }
   learner_created: false
+- name: src/converter/Converter.java
+  visible: true
+  learner_created: true
 feedback_link: https://hyperskill.org/projects/41/stages/218/implement
-status: Unchecked
-record: -1
+status: Solved
+record: 5
