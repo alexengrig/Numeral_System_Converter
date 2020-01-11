@@ -1,0 +1,95 @@
+package converter;
+
+public class Converter {
+    private final int minRadix;
+    private final int maxRadix;
+    private final String alphabet;
+
+    public Converter() {
+        this(1, 36, "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ");
+    }
+
+    public Converter(int minRadix, int maxRadix, String alphabet) {
+        if (maxRadix > alphabet.length()) {
+            String message = String.format("The maximum radix is greater than the length of the alphabet: %d > %d.",
+                    maxRadix, alphabet.length());
+            throw new IllegalArgumentException(message);
+        } else if (minRadix > maxRadix) {
+            String message = String.format("The minimum radix is greater than the maximum radix: %d > %d.",
+                    minRadix, maxRadix);
+            throw new IllegalArgumentException(message);
+        }
+        this.minRadix = minRadix;
+        this.maxRadix = maxRadix;
+        this.alphabet = alphabet;
+    }
+
+    public String convert(String source, int sourceRadix, int targetRadix) {
+        requireRadixInRange(sourceRadix);
+        requireRadixInRange(targetRadix);
+        int decimal = convertToDecimal(source, sourceRadix);
+        String result = convertFromDecimal(decimal, targetRadix);
+        return result;
+    }
+
+    private void requireRadixInRange(int radix) {
+        if (radix < minRadix) {
+            String message = String.format("The radix is less than the minimum radix: %d < %d.",
+                    radix, minRadix);
+            throw new IllegalArgumentException(message);
+        } else if (radix > maxRadix) {
+            String message = String.format("The radix is greater than the maximum radix: %d > %d.",
+                    radix, maxRadix);
+            throw new IllegalArgumentException(message);
+        }
+    }
+
+
+    public int convertToDecimal(String source, int sourceRadix) {
+        char[] members = source.toCharArray();
+        int sum = 0;
+        for (int i = 0, n = members.length - 1; i <= n; i++) {
+            char member = members[i];
+            int value = getValueFromAlphabet(member);
+            int power = (int) Math.pow(sourceRadix, n - i);
+            int multi = value * power;
+            sum += multi;
+        }
+        return sum;
+    }
+
+    public String convertFromDecimal(int source, int targetRadix) {
+        StringBuilder builder = new StringBuilder();
+        int remainder;
+        int dividend = source;
+        do {
+            remainder = dividend % targetRadix;
+            char member = getMemberFromAlphabet(remainder);
+            builder.append(member);
+        } while ((dividend /= targetRadix) >= targetRadix);
+        if (dividend != 0) {
+            builder.append(dividend);
+        }
+        return builder.reverse().toString();
+    }
+
+    private int getValueFromAlphabet(char member) {
+        int index = alphabet.indexOf(member);
+        if (index >= 0) {
+            return index;
+        } else {
+            String message = String.format("The alphabet doesn't contain member: '%s'.", member);
+            throw new IllegalArgumentException(message);
+        }
+    }
+
+    private char getMemberFromAlphabet(int value) {
+        if (value >= 0 && value < alphabet.length()) {
+            return alphabet.charAt(value);
+        } else {
+            String message = String.format("The value is greater than or equal to the length of the alphabet: %d >= %d.",
+                    value, alphabet.length());
+            throw new IllegalArgumentException(message);
+        }
+    }
+}

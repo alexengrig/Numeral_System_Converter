@@ -1,7 +1,10 @@
+import converter.Converter;
 import converter.Main;
 import org.hyperskill.hstest.v6.stage.BaseStageTest;
 import org.hyperskill.hstest.v6.testcase.CheckResult;
 import org.hyperskill.hstest.v6.testcase.TestCase;
+import org.junit.Assert;
+import org.junit.Test;
 
 import java.util.List;
 
@@ -99,5 +102,68 @@ public class ConverterTest extends BaseStageTest<Clue> {
         }
 
         return new CheckResult(true);
+    }
+
+    private String removeEndZeros(String number) {
+        if (!number.contains(".")) {
+            return number;
+        }
+        while (number.endsWith("0")) {
+            number = number.substring(0, number.length() - 1);
+        }
+        if (number.endsWith(".")) {
+            number = number.substring(0, number.length() - 1);
+        }
+        return number;
+    }
+
+    // My tests
+
+    @Test
+    public void check_binary_to_decimal() {
+        Converter converter = new Converter();
+        int result = converter.convertToDecimal("11101000", 2);
+        Assert.assertEquals(232, result);
+    }
+
+    @Test
+    public void check_octal_to_decimal() {
+        Converter converter = new Converter();
+        int result = converter.convertToDecimal("75013", 8);
+        Assert.assertEquals(31243, result);
+    }
+
+    @Test
+    public void check_hex_to_decimal() {
+        Converter converter = new Converter();
+        int result = converter.convertToDecimal("FDA1", 16);
+        Assert.assertEquals(64929, result);
+    }
+
+    @Test
+    public void check_decimal_to_binary() {
+        Converter converter = new Converter();
+        String result = converter.convertFromDecimal(22, 2);
+        Assert.assertEquals("10110", result);
+    }
+
+    @Test
+    public void check_decimal_to_octal() {
+        Converter converter = new Converter();
+        String result = converter.convertFromDecimal(571, 8);
+        Assert.assertEquals("1073", result);
+    }
+
+    @Test
+    public void check_decimal_to_hex() {
+        Converter converter = new Converter();
+        String result = converter.convertFromDecimal(7467, 16);
+        Assert.assertEquals("1D2B", result);
+    }
+
+    @Test public void check() {
+        Converter converter = new Converter();
+        String result = converter.convert("1010", 2, 16);
+        Assert.assertEquals("A", result);
     }
 }
