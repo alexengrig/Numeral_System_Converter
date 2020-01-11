@@ -136,7 +136,7 @@ public class ConverterTest extends BaseStageTest<Clue> {
     @Test
     public void check_hex_to_decimal() {
         Converter converter = new Converter();
-        int result = converter.convertToDecimal("FDA1", 16);
+        int result = converter.convertToDecimal("fda1", 16);
         Assert.assertEquals(64929, result);
     }
 
@@ -158,12 +158,26 @@ public class ConverterTest extends BaseStageTest<Clue> {
     public void check_decimal_to_hex() {
         Converter converter = new Converter();
         String result = converter.convertFromDecimal(7467, 16);
-        Assert.assertEquals("1D2B", result);
+        Assert.assertEquals("1d2b", result);
     }
 
-    @Test public void check() {
+    @Test
+    public void check_10(){
+        Converter converter = new Converter();
+        String r = converter.convert("1000", 10, 36);
+        Assert.assertEquals("rs", r);
+    }
+    @Test
+    public void check_fraction(){
+        Converter converter = new Converter();
+        String result = converter.convertFromFraction(0.234, 7);
+        Assert.assertEquals("143", result.substring(0, 3));
+    }
+
+    @Test
+    public void check_convert() {
         Converter converter = new Converter();
         String result = converter.convert("1010", 2, 16);
-        Assert.assertEquals("A", result);
+        Assert.assertEquals("a", result);
     }
 }

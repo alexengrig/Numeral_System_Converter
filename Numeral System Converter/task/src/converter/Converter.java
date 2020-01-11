@@ -6,7 +6,7 @@ public class Converter {
     private final String alphabet;
 
     public Converter() {
-        this(1, 36, "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ");
+        this(1, 36, "0123456789abcdefghijklmnopqrstuvwxyz");
     }
 
     public Converter(int minRadix, int maxRadix, String alphabet) {
@@ -27,9 +27,37 @@ public class Converter {
     public String convert(String source, int sourceRadix, int targetRadix) {
         requireRadixInRange(sourceRadix);
         requireRadixInRange(targetRadix);
-        int decimal = convertToDecimal(source, sourceRadix);
-        String result = convertFromDecimal(decimal, targetRadix);
-        return result;
+        if (sourceRadix == 1 || targetRadix == 1) {
+            return convertByOne(source, sourceRadix, targetRadix);
+        } else if (source.contains(".")) {
+            String[] number = source.split("\\.");
+            String integerPart = number[0];
+            int integer = convertToDecimal(integerPart, sourceRadix);
+            String convertedInteger = convertFromDecimal(integer, targetRadix);
+            String fractionalPart = number[1];
+            double fraction = getFraction(fractionalPart, sourceRadix);
+            String convertedFraction = convertFromFraction(fraction, targetRadix);
+            return convertedInteger + "." + convertedFraction;
+        } else {
+            int decimal = convertToDecimal(source, sourceRadix);
+            return convertFromDecimal(decimal, targetRadix);
+        }
+    }
+
+    public String convertByOne(String source, int sourceRadix, int targetRadix) {
+        String[] number = source.split("\\.");
+        String integerPart = number[0];
+        int integer;
+        if (sourceRadix == 1) {
+            integer = integerPart.length();
+        } else {
+            integer = convertToDecimal(integerPart, sourceRadix);
+        }
+        if (targetRadix == 1) {
+            return "1".repeat(Math.max(0, integer));
+        } else {
+            return convertFromDecimal(integer, targetRadix);
+        }
     }
 
     private void requireRadixInRange(int radix) {
@@ -43,7 +71,6 @@ public class Converter {
             throw new IllegalArgumentException(message);
         }
     }
-
 
     public int convertToDecimal(String source, int sourceRadix) {
         char[] members = source.toCharArray();
@@ -68,9 +95,25 @@ public class Converter {
             builder.append(member);
         } while ((dividend /= targetRadix) >= targetRadix);
         if (dividend != 0) {
-            builder.append(dividend);
+            builder.append(getMemberFromAlphabet(dividend));
         }
         return builder.reverse().toString();
+    }
+
+    public String convertFromFraction(double source, int targetRadix) {
+        double multiplier = source;
+        StringBuilder builder = new StringBuilder();
+        for (int i = 0; i < 5; i++) {
+            multiplier *= targetRadix;
+            int value = (int) multiplier;
+            char member = getMemberFromAlphabet(value);
+            builder.append(member);
+            String string = String.valueOf(multiplier);
+            int index = string.indexOf('.');
+            String fraction = string.substring(index + 1);
+            multiplier = Double.parseDouble("0." + fraction);
+        }
+        return builder.toString();
     }
 
     private int getValueFromAlphabet(char member) {
@@ -91,5 +134,17 @@ public class Converter {
                     value, alphabet.length());
             throw new IllegalArgumentException(message);
         }
+    }
+
+    public double getFraction(String source, int sourceRadix) {
+        char[] members = source.toCharArray();
+        double sum = 0.0;
+        for (int i = 0, n = members.length; i < n; i++) {
+            char member = members[i];
+            double value = getValueFromAlphabet(member);
+            double power = (int) Math.pow(sourceRadix, i + 1);
+            sum += value / power;
+        }
+        return sum;
     }
 }
