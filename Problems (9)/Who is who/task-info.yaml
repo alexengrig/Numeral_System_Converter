@@ -1,0 +1,14 @@
+type: code
+files:
+- name: src/Main.java
+  visible: true
+  text: |-
+    public static void determineWhoIsWho(Employee[] employees) {
+        for (Employee employee : employees) {
+            System.out.println("EMP");
+        }
+    }
+  learner_created: false
+feedback_link: https://hyperskill.org/learn/step/2207
+status: Solved
+record: -1
